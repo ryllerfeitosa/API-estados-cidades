@@ -71,13 +71,13 @@ response.status(200)
 response.json({"Message": "Testando minha API de cidades"})
 })*/
 //Retorna dados de estados filtrando pelo UF
-app.get('/v1/senai/dados/estados/:uf', function(request, response){
+app.get('/v1/senai/dados/estados/', function(request, response){
     /*
         Para receber dados diretamente do front, utilizamos no nome do Endpoint o ':', isso indica que será
         criado uma variável, o nome da variável é o que escrevemos logo após o ':'
         Não inverter o request e o response, pois é uma função de callBack
     */
-    let sigla = request.params.uf
+    let sigla = request.query.uf
     let estado = estadosCidades.getDadosEstados(sigla)
     if(estado){
         response.status(200)
@@ -90,8 +90,8 @@ app.get('/v1/senai/dados/estados/:uf', function(request, response){
 
 })
 //Retorna dados da capital do estado filtrando pelo UF
-app.get('/v1/senai/capital/estados/:uf', function(request, response){
-    let sigla = request.params.uf
+app.get('/v1/senai/capital/estados/', function(request, response){
+    let sigla = request.query.uf
     let estado = estadosCidades.getCapitalEstados(sigla)
     if(estado){
         response.status(200)
@@ -112,8 +112,8 @@ app.get('/v1/senai/estados/capital/brasil', function(request, response){
     }
 })
 //Retorna dados do estado filtrando pela região
-app.get('/v1/senai/estados/regiao/:regiao', function(request, response){
-    let filtro = request.params.regiao
+app.get('/v1/senai/estados/regiao/', function(request, response){
+    let filtro = request.query.regiao
     let regiao = estadosCidades.getEstadosRegiao(filtro)
     if(regiao){
         response.status(200)
@@ -124,8 +124,8 @@ app.get('/v1/senai/estados/regiao/:regiao', function(request, response){
     }
 })
 //Retorna dados das cidades filtrando pelo UF
-app.get('/v1/senai/cidades/estados/:uf', function(request, response){
-    let sigla = request.params.uf
+app.get('/v1/senai/cidades/estados/', function(request, response){
+    let sigla = request.query.uf
     let cidades = estadosCidades.getCidades(sigla)
 
     if(!cidades){
@@ -158,7 +158,7 @@ app.get('/v1/senai/estados', function(request, response){
     response.status(200)
     response.json(estados)
 })
-
+//Retorna o caminho para os EndPoints
 app.get('/v1/senai/help', function(request, response){
     let docAPI = {
         "API-description": "API para manipular dados de estados e cidades",
@@ -205,3 +205,17 @@ app.get('/v1/senai/help', function(request, response){
 app.listen(8080, function(){
     console.log("API funcionando e aguardando novas requisições...")
     })
+
+/*
+    /v1/senai/dados/estados/sp -> Variável via parâmetro, o problema é que só conseguimos passar um parâmetro como filtro
+    /v1/senai/dados/estados/?filtro = sp & regiao = sul -> Variável via Query, conseguimos passar mais de um parâmetro como filtro
+
+    Aplicando via Query:
+    Antes: app.get('/v1/senai/dados/estados/:uf', function(request, response){   Variável via parâmetro
+                let sigla = request.params.uf
+                let estado = estadosCidades.getDadosEstados(sigla)}
+    
+    Depois: app.get('/v1/senai/dados/estados', function(request, response){      Variável via query
+                let sigla = request.query.uf
+                let estado = estadosCidades.getDadosEstados(sigla)}
+*/
