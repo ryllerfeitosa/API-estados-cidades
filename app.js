@@ -45,7 +45,7 @@ e a variável const app é o objeto
 */
 const app = express()
 
-//Conjunto de permissões a sere aplicadas no CORS da API
+//Conjunto de permissões a serem aplicadas no CORS da API
 const corsOptions = {
     /*
         o '*' deixa em aberto quem irá fazer a requisição na API, para deixa-lo restrito a uma máquina, 
